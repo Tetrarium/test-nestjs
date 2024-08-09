@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
+import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { Observable } from "rxjs";
 import { Roles } from "./roles.decorator";
@@ -29,5 +29,6 @@ function matchRoles(roles: string[], userRoles: string[]) {
     }
   }
 
-  return false;
+  throw new UnauthorizedException();
+  // return false;
 }

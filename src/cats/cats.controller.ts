@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, ForbiddenException, Get, HttpCode, HttpException, HttpStatus, Param, ParseIntPipe, Post, Put, Query, Redirect, Res, UseFilters, UseGuards, UsePipes } from "@nestjs/common";
+import { Body, Controller, Delete, ForbiddenException, Get, HttpCode, HttpException, HttpStatus, Param, ParseIntPipe, Post, Put, Query, Redirect, Res, UseFilters, UseGuards, UseInterceptors, UsePipes } from "@nestjs/common";
 import { CreateCatDto, createCatSchema } from "./dto/create-cat.dto";
 import { ListAllEntities } from "./dto/list-all-entites.dto";
 import { UpdateCatDto } from "./dto/update-cat.dto";
@@ -8,9 +8,12 @@ import { HttpExceptionFilter } from "src/exceptions/http-exception.filter";
 import { ZodValidationPipe } from "src/pipes/validation.pipe";
 import { RolesGuard } from "src/guards/roles.guard";
 import { Roles } from "src/guards/roles.decorator";
+import { LoggingInterceptor } from "src/interceptors/logging.interceptor";
+import { TransformInterceptor } from "src/interceptors/transform.interceptor";
 
 @Controller('cats')
 @UseGuards(RolesGuard)
+@UseInterceptors(LoggingInterceptor)
 export class CatsController {
   constructor(private catsService: CatsService) {}
 
@@ -23,7 +26,7 @@ export class CatsController {
   }
 
   @Get()
-  // @UseFilters(HttpExceptionFilter)
+  @UseInterceptors(TransformInterceptor)
   async findAll(): Promise<Cat[]> {
     return this.catsService.findAll();
   }
