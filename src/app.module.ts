@@ -14,7 +14,10 @@ import { AppService } from './app.service';
   imports: [
     CatsModule,
     AuthModule,
-    ConfigModule.register({ folder: './config' }),
+    ConfigModule.register({
+      isGlobal: true,
+      folder: './config'
+    }),
   ],
   controllers: [AppController],
   providers: [
